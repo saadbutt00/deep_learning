@@ -1,6 +1,6 @@
-import numpy
-import tensorflow
-import streamlit
+import numpy as np
+import tensorflow as tf
+import streamlit as st
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.utils import to_categorical
@@ -23,10 +23,10 @@ labels = {
 model = load_model("model.keras")
 
 # Streamlit UI for image upload and prediction
-streamlit.title("Traffic Sign Recognition 🚦")
+st.title("Traffic Sign Recognition 🚦")
 
 # Introduction Section
-streamlit.markdown("""
+st.markdown("""
 ### Introduction
 This model recognizes traffic signs using a deep learning approach. 
 The dataset used for training the model is the **German Traffic Sign Recognition Benchmark (GTSRB)**, which consists of 43 different traffic sign classes. 
@@ -38,8 +38,8 @@ This model helps identify traffic signs and their corresponding meanings, which 
 """)
 
 # Upload image using Streamlit (both upload button & drag-and-drop)
-uploaded_file = streamlit.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-streamlit.write("Or drag and drop an image into the box above.")
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+st.write("Or drag and drop an image into the box above.")
 
 if uploaded_file is not None:
     # Open the image
@@ -51,20 +51,20 @@ if uploaded_file is not None:
         st.error(f"Error loading image: {e}")
     
     # Preprocess the image
-    img_array = numpy.array(img)  # Convert to numpy array
-    img_array = numpy.expand_dims(img_array, axis=0) / 255.0  # Normalize and add batch dimension
+    img_array = np.array(img)  # Convert to numpy array
+    img_array = np.expand_dims(img_array, axis=0) / 255.0  # Normalize and add batch dimension
     
     # Predict the class
     prediction = model.predict(img_array)
-    predicted_class = numpy.argmax(prediction, axis=1)[0]  # Get the class with the highest probability
+    predicted_class = np.argmax(prediction, axis=1)[0]  # Get the class with the highest probability
     predicted_label = labels[predicted_class]  # Map class to label
     
     # Output Section: Display image and prediction
-    streamlit.image(img, caption="Uploaded Image", use_column_width=True)
-    streamlit.write(f"     **Prediction** - {predicted_label}")
+    st.image(img, caption="Uploaded Image", use_column_width=True)
+    st.write(f"     **Prediction** - {predicted_label}")
     
 # Conclusion Section
-streamlit.markdown("""
+st.markdown("""
 ### Conclusion
 This model has been trained on a diverse set of traffic signs, achieving high accuracy in predicting the correct sign. The accuracy of the model depends on factors such as the quality of the image and the clarity of the sign in the image. This model can help in applications such as autonomous driving systems, road safety applications, and assistive technologies for drivers.
 """)
